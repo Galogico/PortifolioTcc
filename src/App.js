@@ -1,16 +1,45 @@
 import { useState } from 'react';
 import './App.css';
+import emailjs from "@emailjs/browser"
+import logo from "./imgs/Galogico.png"
 
 function App() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
 
+  function SendEmail(e){
+    e.preventDefault();
+
+    if(name === '' || email === '' || message === ''){
+      alert('Preencha todos os campos');
+      return;
+    }
+
+    const TemplateParams = {
+      from_name: name,
+      message: message,
+      email: email
+
+    }
+
+    emailjs.send("", "", TemplateParams, "")
+    .then((response) => {
+      console.log("email", response.status, response.text)
+      setName("")
+      setEmail("")
+      setMessage("")
+    }, (error) =>{
+      console.log("error")
+    })
+  }
+
   return (
     <div className="container">
-      <h1 className="title">Contato</h1>
+      <img src={logo} className="title"/>
+      <button type="button" className="saibaMais">SAIBA MAIS</button>
 
-      <form className="form" onSubmit={() => {}}>
+      <form className="form" onSubmit={SendEmail}>
         <input 
           className="input"
           type="text"
